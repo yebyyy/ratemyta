@@ -5,6 +5,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        playwrite: ['"Playwrite BE VLG"', 'serif'],
+        matemasie: ["Matemasie", "sans-serif"],
+        suse: ["Suse", "sans-serif"],
+      },
       colors: {
         primary: '#F8E16C', // Yellow color for primary
         secondary: '#ffffff', // White color for secondary
