@@ -1,7 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, permissions
 # viewsets is a collection of views (functions) that help us to create CRUD views
 from .models import School, TA, Review, User
-from .serializer import SchoolSerializer, TASerializer, ReviewSerializer, UserSerializer
+from .serializer import SchoolSerializer, TASerializer, ReviewSerializer, UserRegistrationSerializer
 
 
 # class based views
@@ -18,7 +18,18 @@ class TAViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class UserViewSet(viewsets.ModelViewSet):
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+
+    def perform_destroy(self, serializer):
+        if serializer.student == self.request.user:
+            serializer.delete()
+    def perform_update(self, serializer):
+        if serializer.student == self.request.user:
+            serializer.save()
+            
+class RegisterUserViewSet(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserRegistrationSerializer

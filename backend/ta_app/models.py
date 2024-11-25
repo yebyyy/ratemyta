@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.conf import settings
 
 class User(AbstractUser):
-    is_student = models.BooleanField(default=False)
-    is_ta = models.BooleanField(default=False)
+    email = models.EmailField(unique=True)
 
     groups = models.ManyToManyField(
         Group,
@@ -32,8 +32,8 @@ class TA(models.Model):
     
 class Review(models.Model):
     ta = models.ForeignKey(TA, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField()  # 1-5
     review = models.TextField()
 
     def __str__(self):
